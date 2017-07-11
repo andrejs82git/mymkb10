@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+<meta charset='windows-1251'>
+<title>МКБ-10 Международная классификация болезней</title>
+<meta name="description" content="Онлайн мкб-10">
+<meta name="keywords" content="мкб-10,справочник мкб-10,онлайн справочник мкб-10">
+<meta name=viewport content="width=device-width, initial-scale=1">
+<style>
+	body{
+		background-color:rgba(26, 97, 183, 0.82);
+		color:#EFF3F9;
+		font:300 18px/1.55 sans-serif;
+	}
+	.hghl{
+		background-color: rgba(236, 207, 118, 0.38);
+	}
+	
+	::-webkit-input-placeholder {
+	  color: #EFF3F9;
+	}
+	::-moz-placeholder { /* Firefox 19+ */
+	  color: #EFF3F9;
+	}
+	:-ms-input-placeholder {
+	  color: #EFF3F9;
+	}
+	:-moz-placeholder { /* Firefox 18- */
+	  color: #EFF3F9;
+	}
+
+	#resultTable > tbody > tr > td:nth-child(1){
+			vertical-align:top;
+	}
+</style>
+<!--google adsence-->
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2787602999559449",
+    enable_page_level_ads: true
+  });
+</script>
+<!--/-->
+<script src ='https://code.jquery.com/jquery-3.1.1.min.js'></script>
+</HEAD>
+<BODY>
+<form id='formId' style='position:fixed;left:10px;top:0px;'>
+	<input id='queryId' type='text' AUTOCOMPLETE="off" 
+	style='width:255px;background-color:rgb(142, 176, 226); color:#EFF3F9;border-style:none;'  placeholder='Введите запрос, например, j069' />
+	<span id='miniHelp' style='font-size:0.6em;display:none;'>ESC для очистки</span>
+</form>
+
+<table id='resultTable' style='padding-top:15px'>
+<tbody>
+</tbody>
+</table>
+<a href='index2.html' style='font-size:0.6em;color:#EFF3F9; margin-top:25px;display:block;'>Справочник одним списком</a>
+<br/>
+<!-- mymkb10 нижний -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-2787602999559449"
+     data-ad-slot="3296792285"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<script>
+$(document).keyup(function(e){
+		if(e.which === 27 ){//escape
+			$('#queryId').focus();
+		}
+	}
+);
+
+$('#queryId').keyup(function(e) {
+	const that = $(this);
+	if(e.which === 27 ){//escape
+		$(this).val('');
+	}
+});
+
+$('#queryId').keypress(function(e) {
+	const that = $(this);
+	if(e.which === 13){//enter
+		let val = rusToEng(that.val());
+		that.val(val);
+		queryFunc(val);
+		return false;
+	}
+});
+
+function queryFunc(queryVal) {
+	$.get( "mkb10Filter.php", { 'query': queryVal})
+	  .done(function( data ) {
+		const dataArr = JSON.parse(data);
+		const appendData = Object.keys(dataArr).reduce(function(acc, key) {
+			if(key==='00') {
+				return acc;
+			}
+			return acc + "<tr><td>"+key+"</td><td>"+dataArr[key]+"</td></tr>";
+		},'');
+		$('#resultTable tbody').find("tr").remove();
+		$('#resultTable tbody').append(appendData);
+	  });
+}
+
+$('input,textarea').focus(function(){
+   $(this).data('placeholder',$(this).attr('placeholder'))
+          .attr('placeholder','');
+}).blur(function(){
+   $(this).attr('placeholder',$(this).data('placeholder'));
+});
+
+function rusToEng(val){
+	val = val.trim().replace(new RegExp('([А-яA-z]\\d\\d)\\.(\\d)','g'),"$1$2");
+	val = val.replace(new RegExp('[А-яа-я]\\d{1,4}','g'), function(str){
+		var ch = str.toLowerCase().charAt(0);
+		var result = (chRus[ch]+"").toUpperCase()+str.substring(1);
+		return result;
+	});
+	return val;
+}
+
+var chRus = [];
+chRus['а'] = 'f';
+chRus['б'] = ',';
+chRus['в'] = 'd';
+chRus['г'] = 'u';
+chRus['д'] = 'l';
+chRus['е'] = 't';
+chRus['ж'] = ';';
+chRus['з'] = 'p';
+chRus['и'] = 'b';
+chRus['й'] = 'q';
+chRus['к'] = 'r';
+chRus['л'] = 'k';
+chRus['м'] = 'v';
+chRus['н'] = 'y';
+chRus['о'] = 'j';
+chRus['п'] = 'g';
+chRus['р'] = 'h';
+chRus['с'] = 'c';
+chRus['т'] = 'n';
+chRus['у'] = 'e';
+chRus['ф'] = 'a';
+chRus['х'] = '[';
+chRus['ц'] = 'w';
+chRus['ч'] = 'x';
+chRus['ш'] = 'i';
+chRus['щ'] = 'o';
+chRus['ъ'] = ']';
+chRus['ы'] = 's';
+chRus['ь'] = 'm';
+chRus['э'] = '\'';
+chRus['ю'] = '.';
+chRus['я'] = 'z';
+
+$(document).ready(function(){
+	const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+	if(!isMobile){$('#miniHelp').show();}
+});
+
+</script>
+
+<!-- Google analyt-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-32023554-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<!-- Google analyt-->
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+            try {
+                w.yaCounter37332270 = new Ya.Metrika({
+                    id:37332270,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true
+                });
+            } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = "https://mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/37332270" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+</BODY>
+</HTML>
